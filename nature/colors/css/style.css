@@ -1,0 +1,49 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+h1 {
+  font-size: 64px;
+  font-weight: 200;
+  letter-spacing: -1px;
+  margin: .3em 0 .1em 0;
+}
+
+p {
+  line-height:1.5em;
+}
+
+#container {
+  width: 900px;
+  margin: 0 auto;
+/*  background-color:rgb(68, 172, 207); */
+}
+
+#content {
+  width:100%;
+
+}
+
+#canvas-wrapper {
+  margin: 0px auto; 
+}
+
+#processing-canvas {
+  position:relative;
+  /*have to figure out how to center this canvas...grrrrr */
+  left:30px;
+  right:30px;
+  border: 1px solid #888;
+}
+
+#header {
+/*  background-color:rgb(200, 172, 207); */
+}
+
+#footer {
+  position:relative;
+  padding: 20px 0 20px 0;
+/*  background-color:rgb(200, 80, 207); */
+  text-align:center;
+
+}
+
