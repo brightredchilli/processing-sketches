@@ -20,18 +20,12 @@ p {
 
 #content {
   width:100%;
-
-}
-
-#canvas-wrapper {
-  margin: 0px auto; 
 }
 
 #processing-canvas {
-  position:relative;
-  /*have to figure out how to center this canvas...grrrrr */
-  left:30px;
-  right:30px;
+  margin: 0px auto;
+  display:block;
+  background-color:#fff;
   border: 1px solid #888;
 }
 
@@ -42,8 +36,8 @@ p {
 #footer {
   position:relative;
   padding: 20px 0 20px 0;
-/*  background-color:rgb(200, 80, 207); */
   text-align:center;
+/*  background-color:rgb(200, 80, 207);  */
 
 }
 
