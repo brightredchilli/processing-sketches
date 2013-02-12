@@ -22,26 +22,27 @@ define(["scripts/lib/processing-1.4.1-api.js"], function() {
       }
 
       this.step = function () {
-        var choice = Math.floor(processing.random(10));
-        switch(choice) {
-          case 0:
-            x--;
-            break;
-          case 1:
-            y--;
-            break;
-          case 2:
-          case 3:
-          case 4:
-          case 5:
-            x++;
-            break;
-          case 6:
-          case 7:
-          case 8:
-          case 9:
-            y++;
-            break;
+
+        if (processing.random(1) > 0.90) {
+          //move towards the mouse
+          x = (processing.mouseX > x) ? x+1 : x-1;
+          y = (processing.mouseY > y) ? y+1 : y-1;
+        } else {
+          var choice = Math.floor(processing.random(4));
+          switch(choice) {
+            case 0:
+              x--;
+              break;
+            case 1:
+              y--;
+              break;
+            case 2:
+              x++;
+              break;
+            case 3:
+              y++;
+              break;
+          }
         }
       }
     }
