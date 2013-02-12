@@ -21,6 +21,7 @@ define(["scripts/lib/processing-1.4.1-api.js", "scripts/lib/gaussian_random.js"]
 
       this.display = function () {
         processing.noStroke();
+        processing.fill(this.nextFillColor());
         processing.ellipse(x,y, width, height);
       }
 
@@ -29,13 +30,15 @@ define(["scripts/lib/processing-1.4.1-api.js", "scripts/lib/gaussian_random.js"]
         var numY = Z.nextGaussian();
         x = Z.nextGaussianValue(sd, meanX);
         y = Z.nextGaussianValue(sd, meanY);
+      }
 
-
+      this.nextFillColor = function () {
         var randR = Z.nextGaussianValue(colorSd, r);
         var randG = Z.nextGaussianValue(colorSd, g);
         var randB = Z.nextGaussianValue(colorSd, b);
 
-        processing.fill(randR, randG, randB);
+        return processing.color(randR, randG, randB, 70);
+
       }
     }
 
