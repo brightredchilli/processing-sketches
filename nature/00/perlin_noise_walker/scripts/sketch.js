@@ -48,10 +48,10 @@ define(["scripts/lib/processing-1.4.1-api.js"], function() {
         var stepX = processing.noise(tx);
         var stepY = processing.noise(ty);
         tx += 0.003;
-        ty += 0.008;
+        ty += 0.003;
 
-        x = processing.map(stepX, 0, 1, 0, processing.width);
-        y = processing.map(stepY, 0, 1, 0, processing.height);
+        x += processing.map(stepX, 0, 1, -10, 10);
+        y += processing.map(stepY, 0, 1, -10, 10);
 
       }
     }
