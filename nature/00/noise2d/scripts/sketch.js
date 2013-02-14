@@ -13,20 +13,30 @@ define(["scripts/lib/processing-1.4.1-api.js"], function() {
     processing.size(500,500);
     processing.background(0);
 
-    //functions
-
+    var xoff = 0; 
+    var xoffSpan = document.getElementById("xoff_display");
+    var yoffSpan = document.getElementById("yoff_display");
+    var skip = 0;
     function procDraw() {
-    var noise = 2;
+      //functions
+      skip++;
+      if ((skip % 2) == 0) {
+        return;
+      }
       processing.loadPixels();
       for (var x = 0; x < processing.width; x++) {
+        var yoff = 0;
         for (var y = 0; y < processing.height; y++) {
-          var brightness = processing.map(processing.noise(noise), 0, 1, 0, 255);
+          var brightness = processing.map(processing.noise(xoff,yoff), 0, 1, 0, 255);
           processing.pixels.setPixel(x + y*processing.width, processing.color(brightness));
-          noise += 0.003;
+          yoff += 0.003;
         }
+        xoff += 0.003;
       }
-      //noise++;
       processing.updatePixels();
+      xoffSpan.textContent = xoff;
+      yoffSpan.textContent = yoff;
+
     };
 
     processing.draw = procDraw;
