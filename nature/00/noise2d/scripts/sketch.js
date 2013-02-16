@@ -19,10 +19,11 @@ define(["scripts/lib/processing-1.4.1-api.js"], function() {
     var xoff = 0, yoff = 2; 
     function procDraw() {
 
-      var currentXOff = 0, currentYOff = 0;
+      var currentXOff = 0;
       //functions
       processing.loadPixels();
       for (var x = 0; x < processing.width; x++) {
+        var currentYOff = 0;
         for (var y = 0; y < processing.height; y++) {
           var brightness = processing.map(processing.noise(xoff + currentXOff ,yoff+ currentYOff), 0, 1, 0, 255);
           processing.pixels.setPixel(x + y*processing.width, processing.color(brightness));
@@ -34,8 +35,8 @@ define(["scripts/lib/processing-1.4.1-api.js"], function() {
       xoffSpan.textContent = xoff;
       yoffSpan.textContent = yoff;
 
-      xoff += 0.003;
-      yoff += 0.003;
+      xoff += 0.009;
+      yoff += 0.009;
 
     };
 
