@@ -10,7 +10,8 @@
 
 ***/
 
-(function(window, document, Math, undef) {
+define(function() {
+ (function(window, document, Math, undef) {
   var nop = function() {};
   var debug = function() {
     if ("console" in window) return function(msg) {
@@ -8787,4 +8788,5 @@
   if (isDOMPresent) window["Processing"] = Processing;
   else this.Processing = Processing
 })(window, window.document, Math);
-
+return Processing;
+});
