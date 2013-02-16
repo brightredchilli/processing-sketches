@@ -1,7 +1,5 @@
-/*define(function() {
-  var Z = 
-  */
-function Ziggurat(){
+define(function() {
+  var Z = function Ziggurat(){
 
     var jsr = 123456789;
 
@@ -90,8 +88,8 @@ function Ziggurat(){
       }
     }
     zigset();
-  }
-/*
+  };
+
   return Z;
 });
-*/
+
