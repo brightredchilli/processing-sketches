@@ -15,25 +15,24 @@ define(["processing", "gaussian"], function(Processing, Gaussian) {
     p.background(255);
     p.smooth();
 
-    var x = 100, y = 100;
-    var xspeed = 5, yspeed = 3.3;
+    var location = new p.PVector(100, 100);
+    var speed = new p.PVector(5, 3);
     
     p.draw = function() {
       p.background(255);
 
-      x += xspeed;
-      y += yspeed;
+      location.add(speed);
 
-      if ((x > p.width) || (x < 0)) {
-        xspeed *= -1;
+      if ((location.x > p.width) || (location.x < 0)) {
+        speed.x *= -1;
       }
-      if ((y > p.height) || (y < 0)) {
-        yspeed *= -1;
+      if ((location.y > p.height) || (location.y < 0)) {
+        speed.y *= -1;
       }
 
       p.stroke(0);
       p.fill(p.color(255, 130, 90));
-      p.ellipse(x, y, 16, 16);
+      p.ellipse(location.x, location.y, 16, 16);
     };
   };
   return module;
