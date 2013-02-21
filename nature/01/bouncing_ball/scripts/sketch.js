@@ -33,6 +33,15 @@ define(["processing", "gaussian"], function(Processing, Gaussian) {
       p.stroke(0);
       p.fill(p.color(255, 130, 90));
       p.ellipse(location.x, location.y, 16, 16);
+
+      if (p.frameCount % 60 == 0) {
+        //draw to the screen the current magnitude
+        var magLabel = document.getElementById("magnitudeLabel");
+        magLabel.innerText = speed.mag();
+
+        var locLabel = document.getElementById("locationLabel");
+        locLabel.innerText = location.mag();
+      }
     };
   };
   return module;
