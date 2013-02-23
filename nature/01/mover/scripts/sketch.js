@@ -13,7 +13,9 @@ define(["processing", "gaussian"], function(Processing, Gaussian) {
     
     function Mover() {
       this.location = new p.PVector(p.random(p.width), p.random(p.height));
-      this.velocity = new p.PVector(p.random(-2, 2), p.random(-2, 2));
+      this.velocity = new p.PVector(0,0); //object is at rest to begin with
+      this.acceleration = new p.PVector(p.random(-0.02, 0.02), p.random(-0.02, 0.02));
+      this.acceleration.limit(10);
 
       this.checkEdges = function () {
         if (this.location.x > p.width) {
@@ -30,11 +32,15 @@ define(["processing", "gaussian"], function(Processing, Gaussian) {
       };
 
       this.update = function () {
+        this.velocity.add(this.acceleration);
+
+        //update location
         this.location.add(this.velocity);
+        this.checkEdges();
       };
 
       this.display = function () {
-        p.ellipse(this.location.x, this.location.y, 15, 15);;
+        p.ellipse(this.location.x, this.location.y, 15, 15);
       };
     }
 
@@ -47,9 +53,8 @@ define(["processing", "gaussian"], function(Processing, Gaussian) {
     var mover = new Mover();
 
     p.draw = function() {
-      p.background(p.color(0, 0, 0, 200));;
+      p.background(p.color(0, 0, 0, 200));
       mover.update();
-      mover.checkEdges();
       mover.display();
     };
   }
