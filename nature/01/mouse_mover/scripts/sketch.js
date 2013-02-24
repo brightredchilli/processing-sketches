@@ -28,6 +28,10 @@ define(["processing", "gaussian"], function(Processing, Gaussian) {
       v.sub(b);
       return v;
     };
+
+    p.PVector.prototype.string = function() {
+      return "x: " + this.x + "y: " + this.y + "z: " + this.z;
+    }
     
     function Mover() {
       var topspeed = 7;
@@ -51,10 +55,12 @@ define(["processing", "gaussian"], function(Processing, Gaussian) {
       this.update = function () {
 
         var mouse = new p.PVector(p.mouseX, p.mouseY);
-        this.acceleration = p.PVector.sub(mouse, this.location);;
+        var dist = p.PVector.sub(mouse, this.location);
+        var mag = dist.mag();
+        this.acceleration = dist.get();
         this.acceleration.normalize();
-        this.acceleration.mult(0.5);
-        
+        this.acceleration.mult((1/mag) * 50);
+        this.acceleration.limit(3);
 
         //update location
         this.velocity.add(this.acceleration);
