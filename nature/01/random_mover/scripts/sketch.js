@@ -10,9 +10,22 @@ define(["processing", "gaussian"], function(Processing, Gaussian) {
 
   function start(p) {
     //declare classes
+    var tx = 0, ty = 1;
+    
+    p.PVector.noise2D = function(tx, ty) {
+      var v = new p.PVector();
+      v.x = p.noise(tx);
+      v.y = p.noise(ty);
+      return v;
+    };
+
+    p.PVector.random2D = function() {
+      var v = new p.PVector(p.random(-1, 1), p.random(-1, 1));
+      return v;
+    };
     
     function Mover() {
-      var topspeed = 20;
+      var topspeed = 7;
       this.location = new p.PVector(p.random(p.width), p.random(p.height));
       this.velocity = new p.PVector(0,0); //object is at rest to begin with
 
@@ -31,8 +44,11 @@ define(["processing", "gaussian"], function(Processing, Gaussian) {
       };
 
       this.update = function () {
-        this.acceleration = new p.PVector(p.random(-1, 1), p.random(-1, 1));
-        this.acceleration.mult(p.random(2));
+        tx += 0.003, ty += 0.003;
+        this.acceleration = p.PVector.noise2D(tx, ty);
+        var random = p.PVector.random2D();
+        random.mult(5);
+        this.acceleration.mult(random);
         this.velocity.add(this.acceleration);
         this.velocity.limit(topspeed);
 
