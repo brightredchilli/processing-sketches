@@ -25,6 +25,7 @@ define(["processing"], function(Processing) {
     };
     
     function Mover() {
+      var hitTop = false;
       var topspeed = 4;
       this.location = new p.PVector(p.random(p.width), 600);
       this.velocity = new p.PVector(0,0); //object is at rest to begin with
@@ -40,17 +41,27 @@ define(["processing"], function(Processing) {
         if (this.location.y > p.height) {
           this.location.y = 0;
         } else if (this.location.y < 0){
-          this.location.y = p.height;
+          hitTop = true;
         }
+
+        
       };
 
       this.update = function () {
 
         //get the acceleration due to helium
+        
 
         this.acceleration.mult(0);
 
-        var windMag = p.map(p.noise(tx), 0, 1, -0.1, 0.1);
+        if (hitTop) {
+          hitTop = false; //reset the bool
+          var bounceForce = Math.abs(this.velocity.y*1.5);
+          this.acceleration.add(new p.PVector(0, bounceForce)); //apply some negative acceleration
+
+        }
+
+        var windMag = p.map(p.noise(tx), 0, 1, -0.05, 0.05);
         var wind = new p.PVector(windMag, 0);
         var helium = new p.PVector(0, -0.02);
         this.acceleration.add(helium);
