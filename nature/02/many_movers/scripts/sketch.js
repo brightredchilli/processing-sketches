@@ -1,4 +1,5 @@
-define(["processing"], function(Processing) {
+define(["processing", "mover"], function(Processing, M) {
+  /*@pjs transparent */
   var module = {};
 
   
@@ -25,8 +26,6 @@ define(["processing"], function(Processing) {
     };
     
     function Mover() {
-
-      var hitTop = false;
       var topspeed = 4;
       this.location = new p.PVector(p.random(p.width), 600);
       this.velocity = new p.PVector(0,0); //object is at rest to begin with
@@ -35,15 +34,17 @@ define(["processing"], function(Processing) {
 
       this.checkEdges = function () {
         if (this.location.x > p.width) {
-          this.location.x = 0;
+          this.location.x = p.width;
+          this.velocity.x *= -1;
+
         } else if (this.location.x < 0){
           this.location.x = p.width;
         }
 
         if (this.location.y > p.height) {
-          this.location.y = 0;
+          this.location.y = p.height;
+          this.velocity.y *= -1;
         } else if (this.location.y < 0){
-          hitTop = true;
         }
       };
 
@@ -56,53 +57,50 @@ define(["processing"], function(Processing) {
       this.update = function () {
 
         //get the acceleration due to helium
-        this.acceleration.mult(0);
-
-        if (hitTop) {
-          hitTop = false; //reset the bool
-          var bounceForce = Math.abs(this.velocity.y*1.1);
-          this.applyForce(new p.PVector(0, bounceForce));
-          //this.acceleration.add(new p.PVector(0, bounceForce)); //apply some negative acceleration
-        }
-
-        var windMag = p.map(p.noise(tx), 0, 1, -0.005, 0.005);
-        var wind = new p.PVector(windMag, 0);
-        var helium = new p.PVector(0, -0.005);
-        //this.acceleration.add(helium);
-        //this.acceleration.add(wind);
-        this.applyForce(helium);
-        this.applyForce(wind);
-        this.acceleration.limit(5);
 
         //update location
         this.velocity.add(this.acceleration);
-        this.velocity.limit(topspeed);
+        //this.velocity.limit(topspeed);
         this.location.add(this.velocity);
         this.checkEdges();
         tx += 0.003;
+        this.acceleration.mult(0);
       };
 
       this.display = function () {
-        p.ellipse(this.location.x, this.location.y, this.mass, this.mass);
+        p.ellipse(this.location.x, this.location.y, this.mass*2, this.mass*2);
       };
     }
     //declare variables
     p.size(800,600);
-    p.background(0);
+    p.background(200,20,200);
 
-    var mover = new Mover();
-    var mover1 = new Mover();
-    mover.mass = 15;
-    mover1.mass = 90;
-    mover1.location.x = 100;
-    mover1.location.y = 500;
+
+    var movers = [];
+    for (var i = 0; i < 20; i++) {
+      var mover = new Mover();
+      mover.mass = p.random(10, 30);
+      mover.location = new p.PVector(10, 10);
+      mover.velocity = new p.PVector(5, 0);
+      movers.push(mover);
+    }
 
     p.draw = function() {
-      p.background(p.color(0, 0, 0, 200));
-      mover.update();
-      mover.display();
-      mover1.update();
-      mover1.display();
+      p.background(p.color(30, 0, 0, 100));
+
+      var windMag = p.map(p.noise(tx), 0, 1, 0, 5);
+      var wind = new p.PVector(windMag, 0);
+      var helium = new p.PVector(0, -0.005);
+
+      for (var i = 0; i < movers.length; i++) {
+        var mover = movers[i];
+        var gravity = new p.PVector(0, 0.1*mover.mass);
+        mover.applyForce(wind);
+        mover.applyForce(gravity);
+        mover.acceleration.limit(5);
+        mover.update();
+        mover.display();
+      }
     };
   }
   return module;
