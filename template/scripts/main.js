@@ -3,7 +3,8 @@ require.config({
     app: "./",
     processing: "lib/processing-1.4.1-api", //p for processing
     domready: "lib/domready",
-    gaussian: "lib/gaussian_random"
+    gaussian: "lib/gaussian_random",
+    mover: "lib/mover"
   }
 });
 

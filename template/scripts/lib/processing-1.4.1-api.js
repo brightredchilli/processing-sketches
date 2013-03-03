@@ -8788,5 +8788,70 @@ define(function() {
   if (isDOMPresent) window["Processing"] = Processing;
   else this.Processing = Processing
 })(window, window.document, Math);
+
+
+//ying static function addtions
+
+Processing.prototype.PVector.div = function (a, b) {
+  var tmp = a.get();
+  if (typeof b === "number") {
+    tmp.x /= b;
+    tmp.y /= b;
+    tmp.z /= b
+  } else {
+    tmp.x /= b.x;
+    tmp.y /= b.y;
+    tmp.z /= b.z;
+  }
+  return tmp;
+}
+
+Processing.prototype.PVector.add = function (a, b) {
+  var tmp = a.get();
+  if (typeof b === "number") {
+    tmp.x += b;
+    tmp.y += b;
+    tmp.z += b;
+  } else {
+    tmp.x += b.x;
+    tmp.y += b.y;
+    tmp.z += b.z;
+  }
+  return tmp;
+}
+
+Processing.prototype.PVector.mult = function (a, b) {
+  var tmp = a.get();
+  if (typeof b === "number") {
+    tmp.x *= b;
+    tmp.y *= b;
+    tmp.z *= b;
+  } else {
+    tmp.x *= b.x;
+    tmp.y *= b.y;
+    tmp.z *= b.z
+  }
+  return tmp;
+}
+
+Processing.prototype.PVector.sub = function (a, b) {
+  var tmp = a.get();
+  if (typeof b === "number") {
+    tmp.x -= b;
+    tmp.y -= b;
+    tmp.z -= b;
+  } else {
+    tmp.x -= b.x;
+    tmp.y == b.y;
+    tmp.z == b.z;
+  }
+  return tmp;
+}
+
+Processing.prototype.PVector.random2d = function () {
+  var v = new Processing.prototype.PVector(Processing.prototype.random(-1, 1), Processing.prototype.random(-1, 1));
+  return v;
+}
+
 return Processing;
 });
