@@ -703,6 +703,11 @@ define(function() {
     PVector.angleBetween = function(v1, v2) {
       return Math.acos(v1.dot(v2) / (v1.mag() * v2.mag()))
     };
+    PVector.random2d = function () {
+      function randomNumber() { return Math.random()*2 - 1; }
+      var v = new PVector(randomNumber(), randomNumber());
+      return v;
+    }
     PVector.prototype = {
       set: function(v, y, z) {
         if (arguments.length === 1) this.set(v.x || v[0] || 0, v.y || v[1] || 0, v.z || v[2] || 0);
@@ -8842,16 +8847,12 @@ Processing.prototype.PVector.sub = function (a, b) {
     tmp.z -= b;
   } else {
     tmp.x -= b.x;
-    tmp.y == b.y;
-    tmp.z == b.z;
+    tmp.y -= b.y;
+    tmp.z -= b.z;
   }
   return tmp;
 }
 
-Processing.prototype.PVector.random2d = function () {
-  var v = new Processing.prototype.PVector(Processing.prototype.random(-1, 1), Processing.prototype.random(-1, 1));
-  return v;
-}
 
 return Processing;
 });
