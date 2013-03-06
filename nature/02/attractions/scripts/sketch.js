@@ -72,18 +72,18 @@ define(["processing", "mover"], function(Processing, Mover) {
     m2.mass = 20;
     m2.size = 10*10;
     m2.location = new p.PVector(400, 300);
-    m2.color = p.color("#FF0");
+    m2.color = p.color(255, 150, 150);
 
     for (var i = 0; i < 10; i++) {
       var m1 = new Mover();
       m1.mass = p.random(2,6);
       m1.size = m1.mass * 10;
       m1.location = new p.PVector.random2d();
-      m1.location.mult(300);
+      m1.location.mult(100);
       m1.location.add(m2.location);
       m1.velocity = new p.PVector.random2d();
-      m1.velocity.mult(3); //give some random velocity
-      m1.color = p.color("royalblue");
+      m1.velocity.mult(4); //give some random velocity
+      m1.color = p.color(p.random(0,150), p.random(0,100), p.random(150,230));
       movers.push(m1);
 
     }
@@ -94,7 +94,6 @@ define(["processing", "mover"], function(Processing, Mover) {
 
       p.pushStyle();
       p.popStyle();
-
 
       m2.display();
       for (var i = 0; i < movers.length; i++) {
