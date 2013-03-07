@@ -68,9 +68,9 @@ define(["processing", "mover"], function(Processing, Mover) {
 
     var movers = [];
 
-    for (var i = 0; i < 10; i++) {
+    function createMover(mass) {
       var m1 = new Mover();
-      m1.mass = p.random(1,3);
+      m1.mass = mass;
       m1.size = m1.mass * 10;
       m1.location = new p.PVector.random2d();
       m1.location.mult(100);
@@ -78,14 +78,28 @@ define(["processing", "mover"], function(Processing, Mover) {
       m1.velocity = new p.PVector.random2d();
       m1.velocity.mult(3); //give some random velocity
       m1.color = p.color(p.random(0,150), p.random(0,100), p.random(150,230));
-      movers.push(m1);
+      return m1;
     }
 
+    for (var i = 0; i < 10; i++) {
+      var mover = createMover(p.random(1,3));
+      movers.push(mover);
+    }
+
+    //create some big movers
+    var big = createMover(20);
+    big.color = p.color(p.random(0,150), p.random(0,100), p.random(150,230));
+    movers.push(big);
+
+    var bg = p.color(30, 30, 30, 20);
+
+    p.noStroke();
 
     p.draw = function() {
-      p.background(30);
 
       p.pushStyle();
+      p.fill(bg);
+      p.rect(0,0,p.width,p.height);
       p.popStyle();
 
       for (var i = 0; i < movers.length; i++) {
