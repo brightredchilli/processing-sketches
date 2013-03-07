@@ -68,5 +68,23 @@ define(["processing"], function() {
 
   };
 
+
+  //physics simulation code
+
+  Mover.prototype.attract = function(location, mass) {
+    var force = p.PVector.sub(this.location, location);
+    var distance = force.mag();
+    distance = p.constrain(distance, 5, 25);
+    force.normalize();
+
+    var strength = (1 * this.mass * mass) / (distance * distance)
+      force.mult(strength);
+    return force;
+  };
+
+  Mover.prototype.attractMover = function(m) {
+    return this.attract(m.location, m.mass);
+  };
+
   return Mover;
 });
