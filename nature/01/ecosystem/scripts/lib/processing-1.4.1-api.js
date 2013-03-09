@@ -703,6 +703,11 @@ define(function() {
     PVector.angleBetween = function(v1, v2) {
       return Math.acos(v1.dot(v2) / (v1.mag() * v2.mag()))
     };
+    PVector.random2d = function () {
+      function randomNumber() { return Math.random()*2 - 1; }
+      var v = new PVector(randomNumber(), randomNumber());
+      return v;
+    }
     PVector.prototype = {
       set: function(v, y, z) {
         if (arguments.length === 1) this.set(v.x || v[0] || 0, v.y || v[1] || 0, v.z || v[2] || 0);
@@ -8788,5 +8793,66 @@ define(function() {
   if (isDOMPresent) window["Processing"] = Processing;
   else this.Processing = Processing
 })(window, window.document, Math);
+
+
+//ying static function addtions
+
+Processing.prototype.PVector.div = function (a, b) {
+  var tmp = a.get();
+  if (typeof b === "number") {
+    tmp.x /= b;
+    tmp.y /= b;
+    tmp.z /= b
+  } else {
+    tmp.x /= b.x;
+    tmp.y /= b.y;
+    tmp.z /= b.z;
+  }
+  return tmp;
+}
+
+Processing.prototype.PVector.add = function (a, b) {
+  var tmp = a.get();
+  if (typeof b === "number") {
+    tmp.x += b;
+    tmp.y += b;
+    tmp.z += b;
+  } else {
+    tmp.x += b.x;
+    tmp.y += b.y;
+    tmp.z += b.z;
+  }
+  return tmp;
+}
+
+Processing.prototype.PVector.mult = function (a, b) {
+  var tmp = a.get();
+  if (typeof b === "number") {
+    tmp.x *= b;
+    tmp.y *= b;
+    tmp.z *= b;
+  } else {
+    tmp.x *= b.x;
+    tmp.y *= b.y;
+    tmp.z *= b.z
+  }
+  return tmp;
+}
+
+Processing.prototype.PVector.sub = function (a, b) {
+  var tmp = a.get();
+  if (typeof b === "number") {
+    tmp.x -= b;
+    tmp.y -= b;
+    tmp.z -= b;
+  } else {
+    tmp.x -= b.x;
+    tmp.y -= b.y;
+    tmp.z -= b.z;
+  }
+  return tmp;
+}
+
+
 return Processing;
 });
