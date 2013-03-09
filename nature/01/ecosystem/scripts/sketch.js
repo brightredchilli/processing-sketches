@@ -6,75 +6,71 @@ define(["processing", "mover"], function(Processing, Mover) {
     module.processing = new Processing(canvas, start);
   }
 
+  
+
+
+
   function start(p) {
     //declare classes
+    Mover.prototype.checkEdges = Mover.NoEdges;
+    
+    function Red() {
+      this.constructor.apply(this);
+      this.size = 30;
+      var r = new p.PVector.random2d();
+      r.mult(200);
+      this.location.add(r);
+      this.location.add(new p.PVector(p.width/2, p.height/2));
+      
+      this.noiseX = p.random(0, 10000);
+      this.noiseY = p.random(0, 10000);
+    }
+    Red.prototype = new Mover();
+    Red.prototype.display = function () {
+      p.pushStyle();
+      p.fill(250, 20, 30);
+      p.ellipse(this.location.x, this.location.y, this.size + 10, this.size + 10);
+      p.noStroke();
+      p.fill(200, 20, 20);
+      p.ellipse(this.location.x, this.location.y, this.size, this.size);
+      p.popStyle();
+    }
 
+    var redUpdate = Red.prototype.update;
+    Red.prototype.update = function () {
+      redUpdate.apply(this);
+      this.velocity.limit(1);
+      this.noiseX += 0.003;
+      this.noiseY += 0.003;
 
-    //declare variables
-    p.size(800,600);
-    p.background(0);
+    };
+
+    Red.prototype.move = function () {
+      var x = p.noise(this.noiseX);
+      var y = p.noise(this.noiseY);
+      x = p.map(x, 0, 1, -0.5, 0.5);
+      y = p.map(y, 0, 1, -0.5, 0.5);
+      this.applyForce(new p.PVector(x, y));
+    }
 
     var movers = [];
     for(var i = 0; i < 20; i++) {
-      var m = new Mover();
-      m.location.add(new p.PVector(300, 300));
-      m.size = 30;
-      var r = new p.PVector.random2d();
-      r.mult(200);;
-      m.location.add(r);
-      movers.push(m);
+      var f = new Red();
+      movers.push(f);
     }
 
-    Mover.prototype.display = function () {
-      p.ellipse(this.location.x, this.location.y, this.size, this.size);
-    };
-
-    var checkEdges = Mover.prototype.checkEdges;
-    Mover.prototype.checkEdges = function () {
-
-      for (var i = 0; i < movers.length; i++) {
-        var m = movers[i];
-        if(this != m) {
-          var direction = p.PVector.sub(this.location, m.location);
-          if (direction.mag() < this.size) {
-            this.applyForce(direction);
-            direction.mult(-1);
-            m.applyForce(direction);
-          }
-        }
-      }
-      checkEdges.call(this);
-
-    };
+    //declare variables
+    p.size(800,600);
 
     p.draw = function() {
-      renderBackground();
+    p.background(70, 0, 0);
 
-      movers.forEach(function (m) {
-        var force = new p.PVector.random2d();
-        force.mult(1);
-        m.applyForce(force);
-        m.update();
-        m.display();
-      });
-
-
-
-
+      for(var i = 0; i < movers.length; i++) {
+        movers[i].move();
+        movers[i].update();
+        movers[i].display();
+      }
     };
-
-    function renderBackground() {
-      /*
-      var pg = p.createGraphics(p.width, p.height);
-      pg.background(34, 100, 200, 50);;
-      p.image(pg);
-      */
-
-      p.pushStyle();
-      p.fill(34, 100, 200, 60);
-      p.rect(0,0,p.width,p.height);
-      p.popStyle();
-    }
-  }
+  };
   return module;
 });
