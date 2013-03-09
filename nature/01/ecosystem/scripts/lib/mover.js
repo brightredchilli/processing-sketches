@@ -1,32 +1,30 @@
 define(["processing"], function() {
 
   function Mover(){
-    this.canvasSize = {};
-    this.canvasSize.width = 800, this.canvasSize.height = 600;
     this.location = new Processing.prototype.PVector();
     this.velocity = new Processing.prototype.PVector();
     this.acceleration = new Processing.prototype.PVector();
     this.size = 15;
     this.mass = 10;
+  };
+  Mover.prototype.canvasSize = {};
+  Mover.prototype.canvasSize.width = 800, Mover.prototype.canvasSize.height = 600;
 
-    //strategies
-
-    this.applyForce = function (f) {
-      var tmp = f.get();
-      tmp.div(this.mass);
-      this.acceleration.add(tmp);
-    };
-
-    this.update = function () {
-      this.velocity.add(this.acceleration);
-      this.location.add(this.velocity);
-      this.checkEdges();
-      this.acceleration.mult(0);
-    };
-
+  Mover.prototype.applyForce = function (f) {
+    var tmp = f.get();
+    tmp.div(this.mass);
+    this.acceleration.add(tmp);
   };
 
-  Mover.prototype.checkEdges = function () {
+  Mover.prototype.update = function () {
+    this.velocity.add(this.acceleration);
+    this.location.add(this.velocity);
+    this.checkEdges();
+    this.acceleration.mult(0);
+  };
+
+
+  Mover.EllipseCheckEdges = function () {
     var halfSize = this.size/2;
     if (this.location.x + halfSize > this.canvasSize.width) {
       this.location.x = this.canvasSize.width - halfSize;
@@ -68,6 +66,23 @@ define(["processing"], function() {
 
   };
 
+  Mover.NoEdges = function () {
+    var halfSize = this.size;
+    if (this.location.x + halfSize > this.canvasSize.width) {
+      this.location.x =  halfSize;
+
+    } else if (this.location.x < 0){
+      this.location.x = this.canvasSize.width - halfSize;
+    }
+
+    if (this.location.y + halfSize > this.canvasSize.height) {
+      this.location.y =  halfSize;
+    } else if (this.location.y < 0){
+      this.location.y = this.canvasSize.height - halfSize;
+    }
+  };
+
+  Mover.prototype.checkEdges = Mover.EllipseCheckEdges;
 
   //physics simulation code
 
