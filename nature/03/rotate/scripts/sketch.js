@@ -16,7 +16,8 @@ define(["processing"], function(Processing) {
 
     var   angle = 0,
           aVelocity = 0,
-          aAcc = 0.001;
+          aAcc = 0.001,
+          time = 0;
       
 
     p.draw = function() {
@@ -29,8 +30,12 @@ define(["processing"], function(Processing) {
       p.ellipse(-50, 0, 15, 15);
       p.ellipse(50, 0, 15, 15);
 
-      aVelocity += aAcc;
-      angle += aVelocity;
+
+      var noise = p.noise(time);
+      noise = p.map(noise, 0, 1, 0, 720); 
+      aVelocity += noise;
+      angle = p.radians(noise);
+      time += 0.003;
 
     };
   };
