@@ -66,7 +66,8 @@ define(["processing", "mover"], function(Processing, Mover) {
     Raindrop.prototype.drawPoint = function(x, y) {
       p.pushMatrix();
       p.translate(x, y);
-      p.fill(p.lerpColor(start, end, y/p.height));
+      //p.fill(p.lerpColor(start, end, y/p.height));
+      p.fill(end);
       p.ellipse(0, 0, 25, 25);
       p.popMatrix();
     };
