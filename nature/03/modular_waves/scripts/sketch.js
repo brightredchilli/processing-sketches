@@ -29,10 +29,14 @@ define(["processing", "mover"], function(Processing, Mover) {
       for (var i = 0; i < this.points; i++) {
         var x = i * this.xDistance;
         var y = this.getYPosition(startAngle);
-        p.ellipse(x + xOffset, y + yOffset, 50, 50);
+        this.drawPoint(x + xOffset, y + yOffset);
         startAngle += this.aVelocity;
       }
     };
+
+    Wave.prototype.drawPoint = function(x, y) {
+      p.ellipse(x, y, 50, 50);
+    }
 
     Wave.prototype.getYPosition = function(a) {
       var y = p.sin(a) * this.amplitude;
@@ -43,6 +47,37 @@ define(["processing", "mover"], function(Processing, Mover) {
       this.angle += 0.001;
     }
 
+    function Raindrop (x, y) {
+      this.amplitude = 30;
+      this.aVelocity = 0.02;
+      this.angle = 0;
+      this.points = 1;
+      this.xOffset = x;
+      this.yOffset = y;
+    }
+
+    Raindrop.prototype = new Wave();
+
+    Raindrop.prototype.drawPoint = function(x, y) {
+      p.pushMatrix();
+      p.translate(x, y);
+      p.ellipse(0, 0, 50, 50);
+      p.popMatrix();
+    };
+
+    Raindrop.prototype.increment = function () {
+      this.angle += 0.01;
+    };
+
+    Raindrop.prototype.getYPosition = function (a) {
+      var y = (p.tan(a)) * this.amplitude;
+      return y;
+    };
+
+    Raindrop.prototype.display = function () {
+      Wave.prototype.display.call(this, this.xOffset, this.yOffset);;
+    };
+
     var xOffset = 100,
         yOffset = p.height/2;
 
@@ -51,16 +86,20 @@ define(["processing", "mover"], function(Processing, Mover) {
     p.stroke(221, 100, 255, 150);
     p.strokeWeight(4);
 
-    var wave = new Wave();
-    wave.getYPosition = function (a) {
-      var y = (p.tan(a)) * this.amplitude;
-      return y;
-    };
+    var raindrops = [];
+    for (var i = 0; i < 50; i++) {
+      var r = new Raindrop(p.random(30, p.width), p.random(50, p.height));
+      r.angle = p.random(0, 5);
+      raindrops.push(r);
+    }
 
     p.draw = function() {
       p.background(255);
-      wave.increment();
-      wave.display(xOffset, yOffset);
+      for (var i = 0; i < raindrops.length; i++) {
+        var r = raindrops[i];
+        r.increment();
+        r.display();
+      }
     };
   };
   return module;
