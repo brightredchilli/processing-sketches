@@ -22,6 +22,7 @@ define(["processing", "mover"], function(Processing, Mover) {
 
     function Pendulum () {
       this.origin = new p.PVector(0,0);
+      this.location = new p.PVector(0,0);
       this.r = 200;
       this.angle = p.PI/2;
       this.aVelocity = 0;
@@ -69,15 +70,22 @@ define(["processing", "mover"], function(Processing, Mover) {
 
       p.popMatrix();
 
+      this.location.set(this.origin.x + x, this.origin.y + y);
+
     };
 
     var pen = new Pendulum();
+    var pen2 = new Pendulum();
+    pen2.angle = p.PI/3;
     pen.origin.set(p.width/2, 100);
 
     p.draw = function() {
       p.background(255);
       pen.update();
       pen.display();
+      pen2.origin = pen.location;
+      pen2.update();
+      pen2.display();
     };
   };
   return module;
