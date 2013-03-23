@@ -19,6 +19,14 @@ define(["processing"], function() {
     this.acceleration.add(tmp);
   };
 
+  Mover.prototype.applyFriction = function (c) {
+    var friction = this.velocity.get();
+    friction.mult(-1);
+    friction.normalize();
+    friction.mult(c);
+    this.applyForce(friction);
+  };
+
   Mover.prototype.update = function () {
     this.velocity.add(this.acceleration);
     this.location.add(this.velocity);
