@@ -20,7 +20,7 @@ define(["processing", "mover"], function(Processing, Mover) {
         end = p.color(234, 36, 88);
 
 
-    function Spring () {
+    var Spring = function () {
       this.origin = new p.PVector();
       this.restLength = 300;
       this.k = 0.3;

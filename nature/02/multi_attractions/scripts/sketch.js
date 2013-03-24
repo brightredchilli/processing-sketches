@@ -91,7 +91,7 @@ define(["processing", "mover"], function(Processing, Mover) {
     big.color = p.color(p.random(0,150), p.random(0,100), p.random(150,230));
     movers.push(big);
 
-    var bg = p.color(30, 30, 30, 20);
+    var bg = p.color(0, 0, 0, 0.09*255);
 
     p.noStroke();
 
