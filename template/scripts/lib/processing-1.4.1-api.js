@@ -311,7 +311,9 @@ define(function() {
         return array[index++]
       };
       this.remove = function() {
-        array.splice(index, 1)
+        if (index - 1 >= 0) {
+          array.splice(index - 1, 1)
+        }
       }
     }
     function ArrayList(a) {
