@@ -1,7 +1,7 @@
 define(["mover"], function(Mover) {
 
   function Particle() {
-    this.lifespan = 0;
+    this.lifespan = 255;
 
   };
 
