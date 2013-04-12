@@ -1,8 +1,8 @@
 define(["mover"], function(Mover) {
 
   function Particle() {
+    Mover.call(this);
     this.lifespan = 255;
-
   };
 
   Particle.prototype = new Mover();
