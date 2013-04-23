@@ -42,7 +42,7 @@ define(["processing", "box2dweb"], function (Processing, Box2DWeb) {
     }
     worldY = this.processing.map(worldY, this.transY, this.transY + this.scaleFactor, 0, 1);
 
-    console.log("x : " + worldX + " y : " + worldY);
+    //console.log("x : " + worldX + " y : " + worldY);
     return new b2Vec2(worldX, worldY);
   }
 
@@ -82,6 +82,10 @@ define(["processing", "box2dweb"], function (Processing, Box2DWeb) {
   PBox2D.prototype.getBodyPixelCoord = function (b) {
     var transform = b.GetTransform();
     return this.coordWorldToPixels(transform.position);
+  }
+
+  PBox2D.prototype.destroyBody = function (b) {
+    this.world.DestroyBody(b);
   }
 
   return PBox2D;

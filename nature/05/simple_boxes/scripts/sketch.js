@@ -19,13 +19,19 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
   }
 
   function start(p) {
+    //declare variables
+    p.size(800,600);
+    p.background(0);
     //declare classes
+    var nX = 0, nY = 100;
 
     var pbox2d = new PBox2D(p);
     pbox2d.createWorld();
-
+    pbox2d.setGravity(new b2Vec2(0, -100));
+   
     function Box(x, y) {
       Particle.call(this);
+      this.lifespan = 200;
       this.location.x = x;
       this.location.y = y;
 
@@ -33,6 +39,16 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
       var bd = new b2BodyDef();
       bd.type = b2Body.b2_dynamicBody;
       bd.position = pbox2d.coordPixelsToWorld(new p.PVector(x, y));
+
+      //random velocity
+      var rx = Math.random();
+      var ry = Math.random();
+      rx = p.map(rx, 0, 1, -500, 500);
+      ry = p.map(ry, 0, 1, -500, 500);
+      var r = new p.PVector(rx, ry);
+      r = pbox2d.coordPixelsToWorld(r);
+      bd.linearVelocity = r;
+
       var body = pbox2d.createBody(bd);
       var polyShape = new b2PolygonShape();
       polyShape.SetAsBox(pbox2d.pxToWorld(this.size), pbox2d.pxToWorld(this.size));
@@ -42,6 +58,10 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
       fd.restitution = 0.5;
       fd.density = 1.0;
       body.CreateFixture(fd);
+
+      //apply some random force ot the body
+      //body.ApplyForce(new b2Vec2(20, 20), body.GetPosition().Copy());
+
       this.body = body;
     }
     Box.prototype = new Particle();
@@ -59,29 +79,30 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
     };
 
     Box.prototype.updateLifespan = function () {
-      // do not die, ever
+      this.lifespan -= 1;
+      if (this.lifespan == 0) {
+        pbox2d.destroyBody(this.body);
+      }
     };
 
     var boxes = new ParticleSystem();
     boxes.display = function () {};
 
-    //declare variables
-    p.size(800,600);
-    p.background(0);
 
     p.mousePressed = function () {
       var particle = new Box(this.mouseX, this.mouseY);
       boxes.addParticle(particle);
     };
 
-    p.mouseDragged = function () {
-      p.mousePressed();
-    };
 
     p.draw = function() {
-    p.background(0);
+      p.background(0);
       boxes.run();
       pbox2d.step();
+      if (p.__mousePressed) {
+        p.mousePressed();
+      }
+      nX += 0.005, nY += 0.005;
     };
   };
   return module;
