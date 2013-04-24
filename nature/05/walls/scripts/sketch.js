@@ -51,7 +51,7 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
 
       var body = pbox2d.createBody(bd);
       var polyShape = new b2PolygonShape();
-      polyShape.SetAsBox(pbox2d.pxToWorld(this.size), pbox2d.pxToWorld(this.size));
+      polyShape.SetAsBox(pbox2d.pxToWorld(this.size/2), pbox2d.pxToWorld(this.size/2));
       var fd = new b2FixtureDef();
       fd.shape = polyShape;
       fd.friction = 0.3;
@@ -90,8 +90,8 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
 
       this.location.x = x;
       this.location.y = y;
-      this.width = w/2;
-      this.height = h/2;
+      this.width = w;
+      this.height = h;
 
       var bd = new b2BodyDef();
       bd.type = b2Body.b2_staticBody;
@@ -99,7 +99,7 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
 
       var body = pbox2d.createBody(bd);
       var polyShape = new b2PolygonShape();
-      polyShape.SetAsBox(pbox2d.pxToWorld(this.width), pbox2d.pxToWorld(this.height));
+      polyShape.SetAsBox(pbox2d.pxToWorld(this.width/2), pbox2d.pxToWorld(this.height/2));
       body.CreateFixture2(polyShape, 1);
       this.body = body;
     }
