@@ -19,7 +19,7 @@ define(["processing", "box2dweb"], function (Processing, Box2DWeb) {
     this.processing = processing_instance;
     this.transX = processing_instance.width/2;
     this.transY = processing_instance.height/2;
-    this.scaleFactor = 10;
+    this.scaleFactor = 50;
   }
 
   PBox2D.prototype.createWorld = function () {

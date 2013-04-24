@@ -72,7 +72,7 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
       p.pushMatrix();
       p.translate(coord.x, coord.y);
       p.rotate(-angle);
-      p.rectMode = p.CENTER;
+      p.rectMode(p.CENTER);
       p.fill(0, 77, 255);
       p.rect(0, 0, this.size, this.size);
       p.popMatrix();
@@ -113,7 +113,7 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
       p.pushMatrix();
       p.translate(this.location.x, this.location.y);
       p.rotate(-angle);
-      p.rectMode = p.CENTER;
+      p.rectMode(p.CENTER);
       p.fill(255, 42, 20);
       p.rect(0, 0, this.width, this.height);
       p.popMatrix();
@@ -138,6 +138,7 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
     p.draw = function() {
       p.background(0);
       p.fill(150);
+      p.rectMode(p.CENTER);
       p.rect(0, 0, 100, 100);
       boxes.run();
       pbox2d.step();
