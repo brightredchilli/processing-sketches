@@ -1,4 +1,5 @@
-define(["processing", "particle", "particlesystem", "pbox2d"], function(Processing, Particle, ParticleSystem, PBox2D) {
+define(["processing", "particle", "particlesystem", "box2dweb", "pbox2d", "b2box", "b2boundary", "b2surface"], 
+    function(Processing, Particle, ParticleSystem, Box2D, PBox2D, Box, Boundary, Surface) {;
   var module = {};
 
   var b2Vec2 = Box2D.Common.Math.b2Vec2;
@@ -28,43 +29,6 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
     var pbox2d = new PBox2D(p);
     pbox2d.createWorld();
     pbox2d.setGravity(new b2Vec2(0, -100));
-   
-    function Box(x, y) {
-      Particle.call(this);
-      this.lifespan = 200;
-      this.location.x = x;
-      this.location.y = y;
-
-      this.size = 15;
-      var bd = new b2BodyDef();
-      bd.type = b2Body.b2_dynamicBody;
-      bd.position = pbox2d.coordPixelsToWorld(new p.PVector(x, y));
-
-      //random velocity
-      var rx = Math.random();
-      var ry = Math.random();
-      rx = p.map(rx, 0, 1, -500, 500);
-      ry = p.map(ry, 0, 1, -500, 500);
-      var r = new p.PVector(rx, ry);
-      r = pbox2d.coordPixelsToWorld(r);
-      bd.linearVelocity = r;
-
-      var body = pbox2d.createBody(bd);
-      var polyShape = new b2PolygonShape();
-      polyShape.SetAsBox(pbox2d.pxToWorld(this.size/2), pbox2d.pxToWorld(this.size/2));
-      var fd = new b2FixtureDef();
-      fd.shape = polyShape;
-      fd.friction = 0.3;
-      fd.restitution = 0.5;
-      fd.density = 1.0;
-      body.CreateFixture(fd);
-
-      //apply some random force ot the body
-      //body.ApplyForce(new b2Vec2(20, 20), body.GetPosition().Copy());
-
-      this.body = body;
-    }
-    Box.prototype = new Particle();
 
     Box.prototype.display = function () {
       var coord = pbox2d.getBodyPixelCoord(this.body);
@@ -78,35 +42,7 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
       p.popMatrix();
     };
 
-    Box.prototype.updateLifespan = function () {
-      this.lifespan -= 1;
-      if (this.lifespan == 0) {
-        pbox2d.destroyBody(this.body);
-      }
-    };
-
-    function Boundary(x, y, w, h) {
-      Particle.call(this);
-
-      this.location.x = x;
-      this.location.y = y;
-      this.width = w;
-      this.height = h;
-
-      var bd = new b2BodyDef();
-      bd.type = b2Body.b2_staticBody;
-      bd.position = pbox2d.coordPixelsToWorld(new p.PVector(x, y));
-
-      var body = pbox2d.createBody(bd);
-      var polyShape = new b2PolygonShape();
-      polyShape.SetAsBox(pbox2d.pxToWorld(this.width/2), pbox2d.pxToWorld(this.height/2));
-      body.CreateFixture2(polyShape, 1);
-      this.body = body;
-    }
-    Boundary.prototype = new Particle();
-    Boundary.prototype.updateLifespan = function () {
-      //do not die ever
-    };
+    
     Boundary.prototype.display = function () {
       var coord = pbox2d.getBodyPixelCoord(this.body);
       var angle = this.body.GetAngle();
@@ -121,49 +57,12 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
       p.rect(coord.x, coord.y, 5, 5);
     };
 
-    function Surface(vertices) {
-      Particle.call(this);
-
-      this.vertices = vertices;
-
-      var worldVertices = [];
-      for (var i = 0; i < this.vertices.length; i++) {
-        worldVertices.push(pbox2d.coordPixelsToWorld(this.vertices[i]));
-      }
-
-      var bd = new b2BodyDef();
-      var body = pbox2d.createBody(bd);
-      var polyShape = new b2PolygonShape();
-      polyShape.SetAsArray(worldVertices, worldVertices.length); 
-      body.CreateFixture2(polyShape, 1);
-      this.body = body;
-    }
-    Surface.prototype = new Particle();
-    Surface.prototype.updateLifespan = function () {};
-
-    Surface.prototype.display = function () {
-      p.pushStyle();
-      p.strokeWeight(2);
-      p.stroke(255);
-      p.beginShape();
-      for (var i = 0; i < this.vertices.length; i++) {
-        var v = this.vertices[i];
-        p.vertex(v.x, v.y);
-        p.pushStyle();
-        p.fill(255, 0, 0);
-        p.ellipse(v.x, v.y, 5, 5);
-        p.popStyle();
-      }
-      p.endShape();
-      p.popStyle();
-    }
-
     var boxes = new ParticleSystem();
     boxes.display = function () {}; //surpress warnings
     
     //var b1 = new Boundary(0, 300, 400, 30);;
     //boxes.addParticle(b1);
-    var b2 = new Boundary(300, 300, 100, 100);
+    var b2 = new Boundary(300, 300, 100, 100, pbox2d);
     boxes.addParticle(b2);
 
     var vertices = [];
@@ -177,22 +76,19 @@ define(["processing", "particle", "particlesystem", "pbox2d"], function(Processi
     var curvyVertices = [];
     var t = 0;
     curvyVertices.push(new p.PVector(p.width, p.height/2 + 150));
-    //for (var x = 0; x < p.width; x += 10) {
     for (var x = p.width-20; x > 0; x -= 100) {;
       var n = p.noise(t);
-      console.log("x : " + x + " y : " + n);
       n = p.map(n, 0, 1, p.height/2, p.height/2 +150);
       curvyVertices.push(new p.PVector(x, n));
       t += 0.03;
     }
     curvyVertices.push(new p.PVector(0, p.height/2 + 150));
-    var c = new Surface(curvyVertices);
+    var c = new Surface(curvyVertices, pbox2d);
     boxes.addParticle(c);
 
 
-
     p.mousePressed = function () {
-      var particle = new Box(this.mouseX, this.mouseY);
+      var particle = new Box(this.mouseX, this.mouseY, pbox2d);
       boxes.addParticle(particle);
     };
 

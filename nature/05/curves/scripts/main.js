@@ -8,6 +8,9 @@ require.config({
     particle: "lib/particle",
     particlesystem: "lib/particlesystem",
     box2dweb: "lib/box2dweb",
+    b2box: "lib/b2box",
+    b2boundary: "lib/b2boundary",
+    b2surface: "lib/b2surface",
     pbox2d: "lib/pbox2d"
   }
 });
