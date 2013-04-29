@@ -78,6 +78,14 @@ define(["processing", "particle", "particlesystem", "box2dweb", "pbox2d", "b2box
       p.line(coord1.x, coord1.y, coord2.x, coord2.y);
     }
 
+    Pair.prototype.updateLifespan = function () {
+      this.lifespan -= 1;
+      if (this.lifespan == 0) {
+        pbox2d.destroyBody(this.p1.body);
+        pbox2d.destroyBody(this.p2.body);
+      }
+    };
+
     function Bridge() {
       var noop = function () {};
 
@@ -94,7 +102,7 @@ define(["processing", "particle", "particlesystem", "box2dweb", "pbox2d", "b2box
         p.ellipse(coord1.x, coord1.y, r*2, r*2);
       };
 
-      var numCircles = p.width/r*2;
+      var numCircles = Math.floor(p.width/(r*2));
 
       for (var x = 0; x < numCircles; x++) {
         var particle = new Particle();
@@ -117,8 +125,9 @@ define(["processing", "particle", "particlesystem", "box2dweb", "pbox2d", "b2box
         var body2 = this.particles.get(i+1).body;
         var jd = new b2DistanceJointDef();
         jd.Initialize(body1, body2, body1.GetWorldCenter(), body2.GetWorldCenter()); 
+        jd.length = 0.05;
         jd.frequencyHz = 10;
-        jd.dampingRatio = 0.5;
+        jd.dampingRatio = 0.9;
         pbox2d.world.CreateJoint(jd);
       }
 
