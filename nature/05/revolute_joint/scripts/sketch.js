@@ -86,13 +86,6 @@ define(["processing", "particle", "particlesystem", "box2dweb", "pbox2d", "b2box
           this.p3.updateLifespan = function () {};
           this.addParticle(this.p3);
 
-          var rjd23 = new b2RevoluteJointDef();
-          rjd12.Initialize(this.p1.body, this.p3.body, this.p2.body.GetWorldCenter());
-          rjd12.enableMotor = true;
-          rjd12.motorSpeed = p.PI*2;
-          rjd12.maxMotorTorque = 5; 
-          pbox2d.world.CreateJoint(rjd23);
-
 
           this.updateLifespan = function () {};
           this.display = function () {};
@@ -112,8 +105,8 @@ define(["processing", "particle", "particlesystem", "box2dweb", "pbox2d", "b2box
            */
 
 
+        p.noStroke();
         p.draw = function() {
-          p.background(0);
           cs.run();
           boxes.run();
           pbox2d.step();
