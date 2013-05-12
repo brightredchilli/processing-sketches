@@ -1,21 +1,18 @@
-define(["processing", "gaussian"], function(Processing, Gaussian) {
-  var module = {};
+define(["processing"], 
+    function(Processing) {
+      var module = {};
 
-  //processing setup
-  module.initialize = function(canvas) {
-    module.processing = new Processing(canvas, start);
-  }
+      //processing setup
+      module.initialize = function(canvas) {
+        module.processing = new Processing(canvas, start);
+      }
 
-  function start(p) {
-    //declare classes
+      function start(p) {
+        //declare variables
+        p.size(800,600);
 
-
-    //declare variables
-    p.size(800,600);
-    p.background(0);
-
-    p.draw = function() {
-    };
-  };
-  return module;
-});
+        p.draw = function() {
+        };
+      };
+      return module;
+    });
