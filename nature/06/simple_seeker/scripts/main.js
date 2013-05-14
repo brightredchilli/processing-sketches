@@ -13,7 +13,8 @@ require.config({
     b2surface: "lib/b2surface",
     pbox2d: "lib/pbox2d",
     toxi: "lib/toxi",
-    two: "lib/two.min"
+    two: "lib/two"
+    //two: "lib/two.min"
   }
 
 });
