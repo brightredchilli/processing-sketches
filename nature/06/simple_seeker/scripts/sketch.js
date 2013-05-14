@@ -10,6 +10,7 @@ define(["processing", "toxi", "two"], function(Processing, toxi, Two) {
   var VerletSpring2D = toxi.physics2d.VerletSpring2D;
   var VerletConstrainedSpring2D = toxi.physics2d.VerletConstrainedSpring2D;
   var VerletMinDistanceSpring2D = toxi.physics2d.VerletMinDistanceSpring2D;
+  var PerlinNoise = toxi.math.noise.PerlinNoise;
 
   //processing setup
   module.initialize = function() {
@@ -31,7 +32,6 @@ define(["processing", "toxi", "two"], function(Processing, toxi, Two) {
     var svg = two.renderer.domElement;
     var physics = new VerletPhysics2D();
     physics.setWorldBounds = new Rect(0, 0, two.width, two.height);
-    physics.addBehavior(new GravityBehavior(new Vec2D(0, 0.5)));
 
     var background = two.makeRectangle(two.width/2, two.height/2, two.width, two.height);
     background.stroke = "#aaa";
@@ -44,36 +44,54 @@ define(["processing", "toxi", "two"], function(Processing, toxi, Two) {
       poly.fill = "orange";
       poly.stroke = "orangered";
       poly.linewidth = 3;
-
-      this.shape = two.makeGroup();
-      this.shape.add(poly);
-      this.shape.translation = new Two.Vector(this.x, this.y);
+      poly.translation.set(x, y);
+      this.shape = poly;
     }
     Vehicle.prototype = new VerletParticle2D();
 
     Vehicle.prototype.display = function () {
       this.shape.translation.x = this.x;
       this.shape.translation.y = this.y;
+      this.shape.rotation = this.getVelocity().heading() + Math.PI/2;
     };
 
     Vehicle.prototype.steer = function (x, y) {
       var target = new Vec2D(x, y);
-      var desired = this.sub(target);
-      desired.limit(5); //maxspeed
-
+      var desired = target.sub(this);
       var steer = desired.sub(this.getVelocity());
-      this.addForce(steer);
+      steer.limit(0.3); //maxspeed
+      if(desired.magnitude() > 50) {
+        this.addForce(steer);
+      }
+      
     };
-    var v = new Vehicle(30, 30);
 
-    svg.addEventListener("mousedown", function (e) {
+
+    var v = new Vehicle(300, 300);
+    var t = new Vehicle(500, 500);
+
+    var target; 
+
+    function mouseDragged (e) {
       var pt = cursorPoint(e);
-      v.steer(pt.x, pt.y);
-    }, false);
+      if (target) {
+        target.translation.x = pt.x;
+        target.translation.y = pt.y;
+      } else {
+        target = two.makeCircle(pt.x, pt.y, 5);
+        target.fill = "blue";
+      }
+
+    };
+
+    svg.addEventListener("mousedown", mouseDragged, false);
 
     two.bind('update', function(frameCount) {
       physics.update();
-      v.shape.translation.x = v.shape.translation.x + 1;
+      v.display();
+      if (target) {
+        v.steer(target.translation.x, target.translation.y);
+      }
     }).play();
   }
   return module;
