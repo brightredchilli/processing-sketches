@@ -38,13 +38,37 @@ define(["processing", "toxi", "two"], function(Processing, toxijs, Two) {
     background.stroke = "#aaa";
 
 
+    /*
     var bar = two.makePolygon(0, -5, 200, -5, 200, 5, 0, 5, false);
     bar.stroke = "white";
     bar.fill = "white";
     bar.translation.set(two.width/2, two.height/2);
+    */
 
 
     var vec = new Vec2D(two.width/2, two.height/2); //this represents the bar at start state
+    var list = new Bars(two.width, two.height, 100);
+
+
+    function Bars (x, y, width) {
+      this.bars = [];
+      for (var i = 0; i < x+width; i += width) {
+        for (var j = 0; j < y+width; j += width) {
+          var bar = two.makePolygon(0, -5, width, -5, width, 5, 0, 5, false);
+          bar.stroke = "white";
+          bar.fill = "white";
+          bar.translation.set(i, j);
+          this.bars.push(bar);
+        }
+      }
+
+      this.update = function (theta) {
+        for (var i = 0; i < this.bars.length; i++) {
+          this.bars[i].rotation = theta;
+        }
+      }
+    }
+
 
 
     function mouseDragged (e) {
@@ -52,7 +76,7 @@ define(["processing", "toxi", "two"], function(Processing, toxijs, Two) {
       var mouse = new Vec2D(pt.x, pt.y);
       var rot = mouse.sub(vec);
       var theta = rot.heading();
-      bar.rotation = theta;
+      list.update(theta);
 
       var hslString = "hsl(" + Math.floor(theta/(Math.PI*2) * 255) + ", 100%, 50%)";
       //background.fill = "hsl(10, 100, 100)";
@@ -61,7 +85,7 @@ define(["processing", "toxi", "two"], function(Processing, toxijs, Two) {
 
       //background.fill = "rgba(" + r + ", " + g + ", " + b + ", 1)";
       background.fill = hslString;
-      console.log(background.fill);
+     // console.log(background.fill);
       //background.fill = "rgb(10, 230, 30)";
 
 
