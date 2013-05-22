@@ -29,16 +29,22 @@ define(["processing", "toxi"], function(Processing, toxi) {
       function Vehicle(x, y) {
         VerletParticle2D.call(this, x, y, 5);
         physics.addParticle(this);
+        this.scale = 3;
       }
       Vehicle.prototype = new VerletParticle2D();
 
       Vehicle.prototype.display = function () {
         p.fill(255);
-        p.ellipse(this.x, this.y, 10, 10);
+        if (this.scale > 1) {
+          this.scale -= 0.005;
+        } else  {
+          this.scale -= 0.001;
+        }
+        p.ellipse(this.x, this.y, this.scale, this.scale);
       };
 
       Vehicle.prototype.steer = function (x, y) {
-        var maxspeed = 2, threshold = 100, target = new Vec2D(x,y);
+        var maxspeed = 1, threshold = 100, target = new Vec2D(x,y);
 
         var desired = target.sub(this);
         var d = desired.magnitude();
@@ -51,7 +57,7 @@ define(["processing", "toxi"], function(Processing, toxi) {
           desired.scaleSelf(maxspeed);
         }
         var steer = desired.sub(this.getVelocity());
-        steer.scaleSelf(0.3); //maxspeed
+        steer.scaleSelf(0.2); //maxspeed
         this.addForce(steer);
       };
 
@@ -70,13 +76,13 @@ define(["processing", "toxi"], function(Processing, toxi) {
         if (normalPoint.sub(projected).magnitude() > path.radius) {
           var t = path.start.add(b.normalizeTo(d + 25)); //look ahead
           v.steer(t.x, t.y);
-          p.fill(255, 0, 0);
-          p.ellipse(t.x, t.y, 10, 10);
+          //p.fill(255, 0, 0);
+          //p.ellipse(t.x, t.y, 10, 10);
         }
 
 
-        p.fill(0, 255, 0);
-        p.ellipse(projected.x, projected.y, 10, 10);
+        //p.fill(0, 255, 0);
+        //p.ellipse(projected.x, projected.y, 10, 10);
       };
 
       function Path(v1, v2) {
@@ -109,8 +115,9 @@ define(["processing", "toxi"], function(Processing, toxi) {
 
       p.noStroke();
 
+      p.background(0);
       p.draw = function() {
-        p.background(0);
+        //p.background(0);
         physics.update();
         var end = path.start.add(path.line);
         v.steer(end.x, end.y);
@@ -118,7 +125,6 @@ define(["processing", "toxi"], function(Processing, toxi) {
         if (p.frameCount % 2 == 0 ) seekToMouse();
 
         v.display();
-        path.display();
 
 
 
