@@ -79,11 +79,11 @@ define(["processing", "toxi"], function(Processing, toxi) {
       };
 
       Vehicle.prototype.separate = function (particles) {
-        var sum = new Vec2D(), count = 0;
+        var sum = new Vec2D(), count = 0, steer = new Vec2D();
         for (var i = 0; i < particles.length; i++) {
           var v = particles[i];
           var dist = this.distanceTo(v);
-          if (dist > 0 && dist < 50) {
+          if (dist > 0 && dist < 100) {
             var repelForce = this.sub(v);
             repelForce.normalize();
             repelForce.scaleSelf(1/dist);
@@ -96,14 +96,14 @@ define(["processing", "toxi"], function(Processing, toxi) {
           sum.scaleSelf(1/count);
           sum.normalize();
           sum.scaleSelf(3);
-          var steer = sum.sub(this.getVelocity());
-          steer.limit(0.3);
-          this.addForce(steer);
+          steer = sum.sub(this.getVelocity());
+          steer.limit(0.2);
         }
+        return steer;
       };
 
       Vehicle.prototype.coalesce = function (particles) {
-        var sum = new Vec2D(), count = 0;
+        var sum = new Vec2D(), count = 0, steer = new Vec2D();
         for (var i = 0; i < particles.length; i++) {
           var v = particles[i];
           var dist = this.distanceTo(v);
@@ -120,10 +120,20 @@ define(["processing", "toxi"], function(Processing, toxi) {
           sum.scaleSelf(1/count);
           sum.normalize();
           sum.scaleSelf(3);
-          var steer = sum.sub(this.getVelocity());
-          steer.limit(0.2);
-          this.addForce(steer);
+          steer = sum.sub(this.getVelocity());
+          steer.limit(0.3);
         }
+        return steer;
+        
+      };
+
+      Vehicle.prototype.act = function (particles) {
+          var mouse = this.separate([new Vec2D(p.mouseX, p.mouseY)]);
+          var separate = this.separate(particles);
+          var coalesce = this.coalesce(particles);
+          this.addForce(mouse.scale(0.3));
+          this.addForce(separate.scale(0.05));
+          this.addForce(coalesce.scale(0.01));
       };
       
       function Path(v1, v2) {
@@ -150,17 +160,36 @@ define(["processing", "toxi"], function(Processing, toxi) {
         }
 
         this.update = function () {
+          if (this.nX == undefined) this.nX = 0;
+          if (this.nY == undefined) this.nY = 1000;
+          this.nX += 0.005, this.nY += 1;
           for (var i = 0; i < this.particles.length; i++) {
             var v = this.particles[i];
             v.display();
-            v.separate(this.particles);
-            v.coalesce(this.particles);
+            v.act(this.particles);
+          }
+          //introduce a perlin steering for all particles
+          var angle = p.map(p.noise(this.nX), 0, 1, 0, Math.PI*2);
+          console.log(angle);
+
+          var perlinForce = new Vec2D(Math.cos(angle), Math.sin(angle));
+          perlinForce.subSelf(0.5);
+          //console.log(perlinForce.x + " " + perlinForce.y);
+          this.apply(perlinForce.limit(0.01));
+        }
+
+        this.apply = function (f) {
+          for (var i = 0; i < this.particles.length; i++) {
+            var v = this.particles[i];
+            v.addForce(f);
           }
         }
       }
 
       var ps = new ParticleSystem();
 
+
+      p.noiseDetail(7);
       p.noStroke();
       p.draw = function() {
         p.background(0);
