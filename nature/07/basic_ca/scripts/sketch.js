@@ -71,7 +71,6 @@ define(["processing"], function(Processing) {
         if (ca.generation > ca.rows) {
           p.background(255);
           ca = new CA(p.random(0, 255));
-          ca = new CA(90);
         }
       }
 
