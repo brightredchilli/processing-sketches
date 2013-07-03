@@ -13,7 +13,7 @@ define(["processing"], function(Processing) {
 
       function drawElement(x,y,radius) {
         p.noFill();
-        p.ellipse(x, y, radius*2, radius*2);
+        p.rect(x, y, radius*2, radius*2);
         if (radius > 2) {
           drawElement(x - radius, y, radius/2);
           drawElement(x + radius, y, radius/2);
