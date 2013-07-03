@@ -11,25 +11,28 @@ define(["processing"], function(Processing) {
     module.processing = new Processing(canvas, function (p) {
       p.size(800, 600);
       p.strokeWeight(0.1);
-      p.rectMode(p.CENTER);
 
       function drawElement(x,y,radius, bearing) {
         p.noFill();
+        p.rectMode(p.CENTER);
         p.pushMatrix();
         p.translate(x, y);
         p.rotate(bearing);
         p.rect(0, 0, radius*2, radius*2);
         p.popMatrix();
-        if (p.abs(bearing) < 10) {
-          drawElement(x - radius/2, y, radius/1.3, bearing + 1.5);
-          drawElement(x + radius/2, y, radius/1.3, bearing + 1.5);
+        if (x < p.width) {
+          drawElement(x + 1, y, radius/1.01, bearing + 0.3);
         }
       }
 
-      p.background(255);
       p.smooth();
-      drawElement(p.width/2, p.height/2, 300, 0);
+      p.background(255);
       p.draw = function() {
+        if (p.frameCount < 2) {
+          drawElement(p.width/2, p.height/2, 300, 0);
+        }
+
+        
       }
 
 
