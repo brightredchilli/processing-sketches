@@ -72,8 +72,11 @@ define(["processing"], function(Processing) {
 
       KochLine.prototype.draw = function () {
         var v = new p.PVector(this.x1, this.y1);
+        var point1 = new p.PVector(this.x1, this.y1);
+        var point2 = new p.PVector(this.x2, this.y2);
+        var direction = point2.get(); direction.sub(point1); direction.div(3);
         p.colorMode(p.HSB, 1);
-        p.stroke(p.map(v.heading2D(), 0, p.PI*2, 0, 1), 1, 1);
+        p.stroke(p.map(direction.heading2D(), 0, p.PI*2, 0, 1), 1, 1);
         p.line(this.x1, this.y1, this.x2, this.y2);
       }
 
