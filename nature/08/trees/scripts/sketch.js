@@ -91,7 +91,7 @@ define(["processing", "lib/arboreal"], function(Processing, Arboreal) {
       Branch.prototype.fasterDraw = function(origin)  {
         
         p.pushMatrix();
-        //p.stroke(p.map(this.direction.heading2D(), p.PI, -p.PI, 0, 1), 1, 1);
+        p.stroke(p.map(origin.heading2D(), p.PI, -p.PI, 0, 1), 1, 1);
         p.translate(origin.x, origin.y);
         p.strokeWeight(5/this.level);
         p.line(0, 0, this.direction.x, this.direction.y);
@@ -132,12 +132,13 @@ define(["processing", "lib/arboreal"], function(Processing, Arboreal) {
       }
 
       var b = new Branch(undefined, new p.PVector(400, 400), new p.PVector(0, -100), 1);
-      splitBranches(b, 20);
+      splitBranches(b, 30);
+      b.fasterDraw(b.origin);
 
       p.colorMode(p.HSB, 1);
       p.smooth();
       p.draw = function() {
-        p.background(255);
+        p.background(0);
         b.fasterDraw(b.origin);
         var noise = p.noise(p.frameCount * 0.005);
         noise = p.map(noise, 0, 1, -0.01, 0.01);
