@@ -25,6 +25,10 @@ define(["processing", "particle",  "particlesystem"], function(Processing, Parti
           for (var j = 0; j < this.rows; j++) {
             this.prevState[i][j] = 0;
             this.nextState[i][j] = 0;
+
+            if (p.random(1) > 0.9) {
+              this.nextState[i][j] = 1;
+            }
           }
         }
 
